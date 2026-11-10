@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "backend": "Python + aiohttp",
+  "results": [
+    {
+      "screen": "lobby",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "screen": "session",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "screen": "architecture",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "screen": "lobby",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "screen": "session",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "screen": "architecture",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "screen": "lobby",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "screen": "session",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "screen": "architecture",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "screen": "lobby",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "screen": "session",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "screen": "architecture",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "screen": "lobby",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "screen": "session",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "screen": "architecture",
+      "width": 1440,
+      "scroll": 1440
+    }
+  ]
+}

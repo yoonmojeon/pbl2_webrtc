@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "backend": "Python + aiohttp",
+  "fresh_venv": true,
+  "runtime_only_install": true,
+  "windows_start_cmd": true,
+  "assets_and_websocket": true,
+  "python": "3.13.2"
+}

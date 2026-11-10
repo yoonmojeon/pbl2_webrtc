@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c31">
+  <meta name="description" content="Chrome와 Edge를 직접 연결하는 WebRTC 원격 현장 지원">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/app.js"></script>
+  <title>FieldLink — 원격 현장 지원</title>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="/" aria-label="FieldLink 홈"><span class="brand-symbol">F<span>↗</span></span><span>FieldLink<small>실시간 원격 현장 지원</small></span></a>
+    <nav><span class="p2p-badge"><i></i> P2P DIRECT</span><button id="help-btn" class="text-button">사용 안내 <span aria-hidden="true">↗</span></button></nav>
+  </header>
+  <main>
+    <div id="environment-alert" class="notice error" hidden></div>
+    <div id="desktop-access" class="notice info" hidden>서버 PC에서 화면을 보내려면 <a id="desktop-send-link" class="text-button" href="/">localhost로 화면 공유 열기 ↗</a></div>
+    <section id="lobby">
+      <div class="hero"><div><span class="eyebrow">WEBRTC REMOTE ASSISTANCE</span><h1>현장을 보고,<br>함께 해결하세요<span>.</span></h1><p>현장 작업자와 원격 전문가를 브라우저로 연결합니다.<br>실시간 영상과 정확한 지시로, 설명의 거리를 줄이세요.</p></div><span class="hero-index">01 / CONNECT</span></div>
+      <div class="lobby-grid">
+        <section class="panel join-panel"><div class="section-heading"><span class="number">01</span><h2>지원 세션 시작</h2></div>
+          <label class="field-label" for="display-name">내 이름</label><input id="display-name" maxlength="30" autocomplete="nickname" placeholder="이름을 입력하세요" value="">
+          <span class="field-label">참여 역할</span><div class="role-selector" role="group" aria-label="참여 역할"><button class="role selected" data-role="field" aria-pressed="true"><span class="role-icon">⌖</span><strong>현장 작업자</strong><small>현장 영상 공유</small></button><button class="role" data-role="expert" aria-pressed="false"><span class="role-icon">◉</span><strong>원격 전문가</strong><small>현장 확인 및 지시</small></button></div>
+          <button id="create-room" class="primary full">새 지원 세션 만들기 <span>↗</span></button>
+          <div class="divider"><span>초대받은 세션이 있나요?</span></div>
+          <form id="join-form"><label class="field-label" for="room-input">방 코드</label><div class="input-row"><input id="room-input" maxlength="15" spellcheck="false" autocomplete="off" placeholder="10자리 코드 입력" aria-describedby="room-hint"><button id="join-room" class="secondary" type="submit">참여하기</button></div><small id="room-hint" class="hint">상대방에게 받은 코드를 입력해 주세요.</small></form>
+          <p id="join-error" class="inline-error" role="alert" hidden></p>
+        </section>
+        <section class="overview-panel"><div class="section-heading"><span class="number">02</span><h2>연결은 간단하게, 지원은 정확하게</h2></div><div class="connection-diagram"><div class="peer-card"><span class="device-icon">▣</span><strong>현장 작업자</strong><small>Chrome / Edge</small></div><div class="connection-line"><span>직접 연결</span><b>←────────→</b><small>영상 · 음성 · 데이터</small></div><div class="peer-card expert"><span class="device-icon">▱</span><strong>원격 전문가</strong><small>Chrome / Edge</small></div></div>
+          <div class="feature-list"><div><span>01</span><div><h3>같은 화면을 함께 보세요</h3><p>카메라 영상 또는 화면을 실시간으로 공유합니다.</p></div></div><div><span>02</span><div><h3>말하고, 가리키고, 그리세요</h3><p>음성 · 채팅 · 포인터 · 주석으로 정확하게 전달합니다.</p></div></div><div><span>03</span><div><h3>연결 상태를 바로 확인하세요</h3><p>실제 연결 품질과 전송 경로를 한눈에 확인합니다.</p></div></div></div>
+          <div class="compatibility"><span class="browser-icon chrome">C</span><span class="browser-icon edge">e</span><div><strong>Chrome ↔ Edge</strong><small>프로그램 설치 없이 · 1:1 지원 세션</small></div><span class="compat-check">✓</span></div>
+        </section>
+      </div>
+      <footer class="lobby-footer"><span>FIELDLINK / REMOTE SUPPORT WORKSPACE</span><span>MediaStream + RTCPeerConnection + RTCDataChannel</span></footer>
+    </section>
+
+    <section id="session" hidden>
+      <div class="session-heading"><div><span class="eyebrow">LIVE SUPPORT SESSION</span><h1>원격 지원 워크스페이스</h1></div><div class="session-invite"><div><small>세션 코드</small><strong id="room-code">—</strong></div><button id="copy-code" class="secondary compact">코드 복사</button><button id="copy-link" class="icon-button" title="초대 링크 복사" aria-label="초대 링크 복사">↗</button></div></div>
+      <div class="session-layout">
+        <div class="workspace">
+          <div class="stage-header"><div><span id="connection-dot" class="status-dot"></span><strong id="connection-label">상대방 대기 중</strong><span id="peer-name" class="muted"></span></div><div><span id="timer">00:00</span><button id="fullscreen" class="icon-button" title="영상 전체 화면" aria-label="영상 전체 화면">⛶</button></div></div>
+          <div id="video-stage" class="video-stage" data-view="remote">
+            <video id="main-video" autoplay muted playsinline></video>
+            <audio id="remote-audio" autoplay></audio>
+            <canvas id="annotation-canvas" aria-label="영상 위에 포인터 또는 주석을 표시하는 영역"></canvas>
+            <div id="remote-pointer" class="remote-pointer" hidden><span>↖</span><small>상대방</small></div>
+            <div id="video-empty" class="video-empty"><span class="empty-device">▱</span><h2 id="empty-title">현장 연결을 기다리고 있습니다</h2><p id="empty-description">상대방에게 세션 코드를 전달해 주세요.<br>카메라나 화면 공유를 시작하면 여기에 표시됩니다.</p><button id="empty-share" class="stage-share">화면 공유 시작 ↗</button></div>
+            <div id="stage-source" class="stage-source" hidden><span class="live-dot"></span><span id="source-label">현장 영상</span></div>
+            <button id="preview-toggle" class="preview" hidden title="내 화면 / 상대방 화면 전환"><video id="preview-video" autoplay muted playsinline></video><span id="preview-label">내 화면 · 클릭하여 전환</span></button>
+            <div id="stage-hint" class="stage-hint" hidden>포인터로 클릭하거나 드래그해 현장을 안내하세요.</div>
+          </div>
+          <div class="annotation-toolbar"><span class="toolbar-label">현장 지시</span><div class="tool-group"><button class="tool active" data-tool="pointer" aria-pressed="true" title="포인터">↖ <span>포인터</span></button><button class="tool" data-tool="pen" aria-pressed="false" title="그리기">✎ <span>그리기</span></button></div><label class="color-label" title="주석 색상"><input type="color" id="pen-color" value="#ff963d" aria-label="주석 색상"></label><button id="clear-annotations" class="tool" title="현재 영상의 주석 지우기">⌫ <span>지우기</span></button><span class="toolbar-spacer"></span><button id="snapshot" class="tool" title="주석을 포함한 영상 캡처">▧ <span>캡처</span></button></div>
+          <div class="media-controls"><div id="viewer-controls" class="media-buttons" hidden><button id="switch-to-send" class="media-button share-button" hidden><span>▱</span><strong>내 화면 공유</strong></button><button id="play-video" class="media-button share-button" disabled><span>▷</span><strong>영상 재생</strong></button><button id="listen-btn" class="media-button" aria-pressed="false" disabled><span>♫</span><strong>소리 켜기</strong></button></div><div id="capture-controls" class="media-buttons"><button id="mic-btn" class="media-button" aria-pressed="false"><span>♩</span><strong>마이크 켜기</strong></button><button id="camera-btn" class="media-button" aria-pressed="false"><span>▣</span><strong>카메라 켜기</strong></button><button id="screen-btn" class="media-button share-button" aria-pressed="false"><span>▱</span><strong>화면 공유</strong></button><button id="devices-btn" class="media-button"><span>⚙</span><strong>장치 설정</strong></button></div><button id="leave-btn" class="danger">연결 종료 <span>↗</span></button></div>
+          <p id="viewer-help" class="hint" hidden>영상 재생은 상대방이 보낸 영상을 보는 버튼입니다. 상대가 화면 공유를 시작하면 활성화됩니다.</p><div class="session-footnote"><span><i class="small-dot"></i> 브라우저 간 직접 전송</span><span id="media-summary">공유 중인 미디어 없음</span></div>
+        </div>
+        <aside class="side-panel panel"><div class="tabs" role="tablist" aria-label="지원 패널"><button role="tab" id="chat-tab" aria-controls="chat-panel" aria-selected="true" class="selected">메시지 <span id="unread-count" hidden>0</span></button><button role="tab" id="stats-tab" aria-controls="stats-panel" aria-selected="false">연결 정보</button></div>
+          <section id="chat-panel" role="tabpanel" aria-labelledby="chat-tab"><div class="chat-intro"><span class="small-dot"></span> 메시지는 P2P 데이터 채널로 전송됩니다.</div><div id="messages" class="messages" role="log" aria-live="polite"><div class="chat-empty" id="chat-empty"><span>↔</span><strong>같은 현장, 이어지는 대화</strong><p>상대방이 연결되면 메시지를 보낼 수 있습니다.</p></div></div><div class="quick-messages"><button data-message="이 부분을 확인해 주세요.">이 부분 확인</button><button data-message="잠시만 기다려 주세요.">잠시 대기</button><button data-message="확인했습니다.">확인 완료</button></div><form id="chat-form" class="chat-form"><label class="sr-only" for="chat-input">메시지 입력</label><textarea id="chat-input" rows="2" maxlength="2000" placeholder="상대방 연결 후 메시지를 입력하세요" disabled></textarea><div><small id="data-status">데이터 채널 대기 중</small><button id="send-chat" type="submit" aria-label="메시지 보내기" disabled>↑</button></div></form></section>
+          <section id="stats-panel" role="tabpanel" aria-labelledby="stats-tab" hidden><div class="quality-heading"><span id="quality-dot" class="status-dot"></span><div><strong id="quality-label">연결 대기</strong><small id="path-label">P2P 경로 확인 전</small></div><span class="quality-live">LIVE</span></div><div class="stats-grid"><div><small>왕복 지연 (RTT)</small><strong id="stat-rtt">—</strong></div><div><small>영상 전송률</small><strong id="stat-bitrate">—</strong></div><div><small>프레임 속도</small><strong id="stat-fps">—</strong></div><div><small>패킷 손실</small><strong id="stat-loss">—</strong></div></div><dl class="stats-details"><div><dt>해상도</dt><dd id="stat-resolution">—</dd></div><div><dt>지터</dt><dd id="stat-jitter">—</dd></div><div><dt>연결 수립 시간</dt><dd id="stat-establish">—</dd></div><div><dt>ICE 상태</dt><dd id="stat-ice">new</dd></div><div><dt>신호 서버</dt><dd id="stat-signal">연결 대기</dd></div><div><dt>상대 미디어</dt><dd id="stat-peer-media">—</dd></div></dl><label class="field-label" for="quality-select">내 영상 전송 품질</label><select id="quality-select"><option value="auto">자동 조절 (기본)</option><option value="high">높음 · 최대 2.5 Mbps</option><option value="medium">보통 · 최대 1 Mbps</option><option value="low">낮음 · 최대 350 Kbps</option></select><small id="quality-hint" class="hint">대역폭은 상한값이며 실제 전송률은 환경에 따라 달라집니다.</small><button id="reconnect-btn" class="secondary full">연결 다시 시도 ↻</button><button id="export-diagnostics" class="text-button full">세션 진단 내려받기 ↓</button><div class="events-title">연결 이벤트</div><ol id="event-log" class="event-log"></ol></section>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <dialog id="help-dialog"><div class="dialog-heading"><div><span class="eyebrow">QUICK START</span><h2>원격 지원 사용 안내</h2></div><button class="icon-button close-dialog" aria-label="닫기">×</button></div><div class="help-steps"><div><b>1</b><p><strong>Chrome에서 세션 만들기</strong><br>이름과 역할을 선택한 뒤 방을 만드세요.</p></div><div><b>2</b><p><strong>스마트폰·노트북 등 다른 기기에서 같은 서버에 접속하기</strong><br>초대 링크 또는 10자리 방 코드로 입장하세요.</p></div><div><b>3</b><p><strong>영상과 음성을 직접 연결하기</strong><br>카메라 또는 화면 공유를 선택하세요. 화면 공유 창은 브라우저에서 직접 선택해야 합니다.</p></div><div><b>4</b><p><strong>현장을 함께 확인하기</strong><br>메시지를 보내고, 영상 위에서 가리키거나 그려 보세요.</p></div></div><div class="help-note"><strong>접속 환경</strong><p>데스크톱에서는 localhost로 접속해 화면을 공유하세요. 같은 공유기의 스마트폰·노트북은 WebRTC 지원 브라우저에서 서버 PC의 내부 IP:3000으로 접속하고 같은 방 코드를 입력하면 됩니다. 일반 HTTP 주소에서는 보기 모드가 됩니다. 다른 기기의 카메라·마이크 송신에는 신뢰되는 HTTPS와 브라우저 지원이 필요합니다. 소리는 데스크톱에서 마이크를 켠 뒤 수신 기기에서 소리 켜기를 누르세요.</p></div><a href="/architecture.html" target="_blank" rel="noopener" class="secondary full link-button">연결 구조와 설계 근거 보기 ↗</a></dialog>
+  <dialog id="devices-dialog"><div class="dialog-heading"><h2>장치 설정</h2><button class="icon-button close-dialog" aria-label="닫기">×</button></div><label class="field-label" for="camera-select">카메라</label><select id="camera-select"><option value="">기본 카메라</option></select><label class="field-label" for="mic-select">마이크</label><select id="mic-select"><option value="">기본 마이크</option></select><p class="hint">장치 목록은 브라우저 권한을 허용한 뒤 표시됩니다. 선택한 장치는 즉시 적용됩니다.</p><button id="refresh-devices" class="secondary full">장치 목록 새로고침</button></dialog>
+</body>
+</html>

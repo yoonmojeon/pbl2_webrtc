@@ -1,0 +1,24 @@
+{
+  "backend": "Python + aiohttp",
+  "at": "2026-11-10T07:59:54.883937+00:00",
+  "checks": [
+    "chrome desktop -> msedge HTTP viewer: desktop leaves viewer mode and shares before the phone joins",
+    "chrome desktop -> msedge HTTP viewer: secure sender and insecure viewer connect without capture permission",
+    "chrome desktop -> msedge HTTP viewer: real captured tab frames are decoded and playing on HTTP",
+    "chrome desktop -> msedge HTTP viewer: manual video playback and received microphone audio toggle work",
+    "chrome desktop -> msedge HTTP viewer: chat, touch pointer and touch annotation reach desktop over P2P",
+    "chrome desktop -> msedge HTTP viewer: no local media tracks and no overflow in portrait or landscape",
+    "chrome desktop -> msedge HTTP viewer: stopping share clears viewer and viewer mode survives leaving/reload",
+    "msedge desktop -> chrome HTTP viewer: desktop leaves viewer mode and shares before the phone joins",
+    "msedge desktop -> chrome HTTP viewer: secure sender and insecure viewer connect without capture permission",
+    "msedge desktop -> chrome HTTP viewer: real captured tab frames are decoded and playing on HTTP",
+    "msedge desktop -> chrome HTTP viewer: manual video playback and received microphone audio toggle work",
+    "msedge desktop -> chrome HTTP viewer: chat, touch pointer and touch annotation reach desktop over P2P",
+    "msedge desktop -> chrome HTTP viewer: no local media tracks and no overflow in portrait or landscape",
+    "msedge desktop -> chrome HTTP viewer: stopping share clears viewer and viewer mode survives leaving/reload",
+    "No uncaught browser errors"
+  ],
+  "errors": [],
+  "actual_iPhone_tested": false,
+  "passed": true
+}

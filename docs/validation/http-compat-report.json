@@ -1,0 +1,15 @@
+{
+  "backend": "Python + aiohttp",
+  "at": "2026-11-10T05:11:48.078991+00:00",
+  "checks": [
+    "Both browsers use an actual insecure HTTP origin with no randomUUID",
+    "Room creation displays a valid 10-character code on HTTP",
+    "Room join and WebRTC data channel connect on HTTP",
+    "P2P chat is delivered without randomUUID",
+    "Fallback IDs have UUID v4 version and variant with no duplicates in the sample",
+    "HTTP automatically uses viewer mode with capture controls hidden",
+    "No uncaught browser errors on the HTTP flow"
+  ],
+  "errors": [],
+  "passed": true
+}
